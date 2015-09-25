@@ -4,10 +4,12 @@
 
 ## Problem statements:
 - Parse 3-high ASCII based numerical characters into numerical strings. E.g.:
+
 >    _  _     _  _ _  _  _  _
 >  | _| _||_||_ |_  ||_||_|| |
 >  ||_  _|  | _||_| ||_| _||_|
 >  
+
   should parse as "1234567890"
   - Each entry is 4 lines long, and each line has 27 characters. The first 3 lines of each entry contain an account number written using pipes and underscores, and the fourth line is blank. Each account number should have 9 digits, all of which should be in the range 0-9. A normal file contains around 500 entries.
 - Not all scans are perfect. Validate account numbers according to a checksum
