@@ -1,6 +1,20 @@
 # Bank OCR Kata
 
-(From: http://codingdojo.org/cgi-bin/index.pl?KataBankOCR)
+Implement OCR Scan parsing and validating for 9-digit ASCII presented account numbers.
+
+(Details: http://codingdojo.org/cgi-bin/index.pl?KataBankOCR)
+
+# Status
+
+This kata is currently in progress, on use case step/user story 1.
+
+## To do:
+### Step 1:
+- Implement OcrNumeralParser.parseOcrLines() Method.
+- Implement OcrNumeralParser.parseOcrFile() Method.
+
+### Step 3:
+- Refactor numeral storage so it's easier to look up abnormal scan results against dictionary or other storage scheme for numeral definitions (data storage should support easy slices, slice comparisons, lookups, and indexing).
 
 ## Problem statements:
 - Parse 3-high ASCII based numerical characters into numerical strings. E.g.:
