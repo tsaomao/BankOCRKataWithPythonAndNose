@@ -15,7 +15,38 @@ class OcrNumeral:
 
 class OcrNumeralParser:
   """OcrNumeralParser works in conjunction with OcrNumeral() class to parse and assign the right numerals to an OCR account string."""
-  pass
+
+  def __init__(self):
+    self.n1 = OcrNumeral(("   " +
+                          "  |" +
+                          "  |"), 1, [7])
+    self.n2 = OcrNumeral((" _ " +
+                          " _|" +
+                          "|_ "), 2, [])
+    self.n3 = OcrNumeral((" _ " +
+                          " _|" +
+                          " _|"), 3, [9])
+    self.n4 = OcrNumeral(("   " +
+                          "|_|" +
+                          "  |"), 4, [])
+    self.n5 = OcrNumeral((" _ " +
+                          "|_ " +
+                          " _|"), 5, [6, 9])
+    self.n6 = OcrNumeral((" _ " +
+                          "|_ " +
+                          "|_|"), 6, [5, 8])
+    self.n7 = OcrNumeral((" _ " +
+                          "  |" +
+                          "  |"), 7, [1])
+    self.n8 = OcrNumeral((" _ " +
+                          "|_|" +
+                          "|_|"), 8, [6, 9, 0])
+    self.n9 = OcrNumeral((" _ " +
+                          "|_|" +
+                          " _|"), 9, [3, 8])
+    self.n0 = OcrNumeral((" _ " +
+                          "| |" +
+                          "|_|"), 0, [9])
 
 
 class BankOcr:
