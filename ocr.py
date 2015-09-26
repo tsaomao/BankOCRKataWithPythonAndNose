@@ -92,24 +92,22 @@ class NumeralFactory:
 
     for numTmp in numeralString:
       tmpNumeral = OcrNumeral(self.asciiDict[numTmp], int(numTmp), self.alternatesDict[numTmp])
+      #put tmpNumeral in a single-element list so it's iterable by [].extend
       outputList.extend([tmpNumeral])
 
     return outputList
 
 class OcrNumeralParser:
   """OcrNumeralParser works in conjunction with OcrNumeral() class to parse and assign the right numerals to an OCR account string."""
+  nf = NumeralFactory()
 
   def __init__(self):
-    self.n1 = NumeralFactory().getOcrSingleton(1)
-    self.n2 = NumeralFactory().getOcrSingleton(2)
-    self.n3 = NumeralFactory().getOcrSingleton(3)
-    self.n4 = NumeralFactory().getOcrSingleton(4)
-    self.n5 = NumeralFactory().getOcrSingleton(5)
-    self.n6 = NumeralFactory().getOcrSingleton(6)
-    self.n7 = NumeralFactory().getOcrSingleton(7)
-    self.n8 = NumeralFactory().getOcrSingleton(8)
-    self.n9 = NumeralFactory().getOcrSingleton(9)
-    self.n0 = NumeralFactory().getOcrSingleton(0)
+    """OcrNumeralParser() constructor populates..."""
+    self.numeralList = self.nf.getOcrNumerals(1234567890, 10)
+
+  def parseOcrNumeral(self):
+    """parseOcrNumeral() takes a string and matches it to its numerical equivalent. E.g. "     |  |" is equivalent to 1, and "   |_|  |" is equivalent to 4. It returns that number value."""
+    pass
 
   def parseOcrLines(self):
     """parseOcrLines() takes an array of 3 strings and parses them out, taking the first 3 characters of each line and collating them into a single string. This corresponds to the OcrNumeral.nX.asciiValue attribute for any particular numeral. Each OcrNumeral.nX.numeralValue can then be concatenated into a single 9-digit account number."""
