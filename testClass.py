@@ -13,6 +13,26 @@ class TestOcrNumeral:
     assert_equal(4, ocrNum.numeralValue)
     assert_equal([9], ocrNum.alternateValues)
 
+class TestAccountNumber:
+
+  def testAccountNumber(self):
+    acct = AccountNumber(45)
+    assert_is_instance(acct, AccountNumber)
+    assert_equal(45, acct.accountNumber)
+    assert_equal("000000045", acct.accountString)
+
+class TestNumeralFactory:
+
+  def testNumeralFactory(self):
+    numAsc = ("   " +
+              "|_|" +
+              "  |")
+    nf = NumeralFactory()
+    ocrNum1 = nf.getOcrSingleton(4)
+    assert_equal(numAsc, ocrNum1.asciiValue)
+    assert_equal(4, ocrNum1.numeralValue)
+    assert_equal([], ocrNum1.alternateValues)
+
 class testOcrNumeralParser:
 
   def testOcrNumeralInstantiationAndInit(self):
