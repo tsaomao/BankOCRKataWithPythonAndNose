@@ -83,13 +83,16 @@ class NumeralFactory:
 
   def getOcrNumerals(self, numVal, padLen):
     """getOcrNumeral() returns a list of OcrNumerals based on the specified string length specified."""
+    outputList = []
+
     if (padLen > len(str(numVal))):
       numeralString = str(numVal).zfill(padLen)
     else:
       numeralString = str(numVal)
 
-    for numeral in numeralString:
-      outputList = outputList.extend(OcrNumeral((self.asciiDict[numeral], int(numeral), self.alternatesDict[numeral])))
+    for numTmp in numeralString:
+      tmpNumeral = OcrNumeral(self.asciiDict[numTmp], int(numTmp), self.alternatesDict[numTmp])
+      outputList.extend([tmpNumeral])
 
     return outputList
 
@@ -97,36 +100,16 @@ class OcrNumeralParser:
   """OcrNumeralParser works in conjunction with OcrNumeral() class to parse and assign the right numerals to an OCR account string."""
 
   def __init__(self):
-    self.n1 = OcrNumeral(("   " +
-                          "  |" +
-                          "  |"), 1, [7])
-    self.n2 = OcrNumeral((" _ " +
-                          " _|" +
-                          "|_ "), 2, [])
-    self.n3 = OcrNumeral((" _ " +
-                          " _|" +
-                          " _|"), 3, [9])
-    self.n4 = OcrNumeral(("   " +
-                          "|_|" +
-                          "  |"), 4, [])
-    self.n5 = OcrNumeral((" _ " +
-                          "|_ " +
-                          " _|"), 5, [6, 9])
-    self.n6 = OcrNumeral((" _ " +
-                          "|_ " +
-                          "|_|"), 6, [5, 8])
-    self.n7 = OcrNumeral((" _ " +
-                          "  |" +
-                          "  |"), 7, [1])
-    self.n8 = OcrNumeral((" _ " +
-                          "|_|" +
-                          "|_|"), 8, [6, 9, 0])
-    self.n9 = OcrNumeral((" _ " +
-                          "|_|" +
-                          " _|"), 9, [3, 8])
-    self.n0 = OcrNumeral((" _ " +
-                          "| |" +
-                          "|_|"), 0, [9])
+    self.n1 = NumeralFactory().getOcrSingleton(1)
+    self.n2 = NumeralFactory().getOcrSingleton(2)
+    self.n3 = NumeralFactory().getOcrSingleton(3)
+    self.n4 = NumeralFactory().getOcrSingleton(4)
+    self.n5 = NumeralFactory().getOcrSingleton(5)
+    self.n6 = NumeralFactory().getOcrSingleton(6)
+    self.n7 = NumeralFactory().getOcrSingleton(7)
+    self.n8 = NumeralFactory().getOcrSingleton(8)
+    self.n9 = NumeralFactory().getOcrSingleton(9)
+    self.n0 = NumeralFactory().getOcrSingleton(0)
 
   def parseOcrLines(self):
     """parseOcrLines() takes an array of 3 strings and parses them out, taking the first 3 characters of each line and collating them into a single string. This corresponds to the OcrNumeral.nX.asciiValue attribute for any particular numeral. Each OcrNumeral.nX.numeralValue can then be concatenated into a single 9-digit account number."""

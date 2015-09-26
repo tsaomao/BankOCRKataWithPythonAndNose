@@ -13,6 +13,7 @@ class TestOcrNumeral:
     assert_equal(4, ocrNum.numeralValue)
     assert_equal([9], ocrNum.alternateValues)
 
+
 class TestAccountNumber:
 
   def testAccountNumber(self):
@@ -20,6 +21,7 @@ class TestAccountNumber:
     assert_is_instance(acct, AccountNumber)
     assert_equal(45, acct.accountNumber)
     assert_equal("000000045", acct.accountString)
+
 
 class TestNumeralFactory:
 
@@ -32,6 +34,34 @@ class TestNumeralFactory:
     assert_equal(numAsc, ocrNum1.asciiValue)
     assert_equal(4, ocrNum1.numeralValue)
     assert_equal([], ocrNum1.alternateValues)
+
+  def testNumeralFactoryList(self):
+    num1 = 45
+    pad1 = 9
+    num2 = 111111111
+    pad2 = 9
+    num3 = 45
+    pad3 = 1
+    nf = NumeralFactory()
+
+    #should generate a 9 element list of OcrNumeral classes based on the string "000000045"
+    list1 = nf.getOcrNumerals(num1, pad1)
+    assert_equal(9, len(list1))
+    assert_equal(0, list1[0].numeralValue)
+    assert_equal(5, list1[8].numeralValue)
+
+    #should generate a 9 element list of OcrNumeral classes based on the string "111111111"
+    list2 = nf.getOcrNumerals(num2, pad2)
+    assert_equal(9, len(list2))
+    assert_equal(1, list2[0].numeralValue)
+    assert_equal(1, list2[8].numeralValue)
+    
+    #should generate a 2 element list of OcrNumeral classes based on the string "45"
+    list3 = nf.getOcrNumerals(num3, pad3)
+    assert_equal(2, len(list3))
+    assert_equal(4, list3[0].numeralValue)
+    assert_equal(5, list3[1].numeralValue)
+    
 
 class testOcrNumeralParser:
 
