@@ -30,9 +30,6 @@ class NumeralFactory:
 
   def __init__(self):
     self.asciiDict = {
-                  "0": " _ " +
-                       "| |" +
-                       "|_|",
                   "1": "   " +
                        "  |" +
                        "  |",
@@ -59,7 +56,10 @@ class NumeralFactory:
                        "|_|",
                   "9": " _ " +
                        "|_|" +
-                       " _|"
+                       " _|",
+                  "0": " _ " +
+                       "| |" +
+                       "|_|"
                 }
     self.alternatesDict = {
                        "0": [9],
@@ -102,16 +102,51 @@ class OcrNumeralParser:
   nf = NumeralFactory()
 
   def __init__(self):
-    """OcrNumeralParser() constructor populates..."""
+    """OcrNumeralParser() constructor populates the Attribute, self.numeralList with the typical, valid OcrNumerals for 0 - 9."""
     self.numeralList = self.nf.getOcrNumerals(1234567890, 10)
 
-  def parseOcrNumeral(self):
-    """parseOcrNumeral() takes a string and matches it to its numerical equivalent. E.g. "     |  |" is equivalent to 1, and "   |_|  |" is equivalent to 4. It returns that number value."""
-    pass
+  def parseOcrNumeral(self, asciiIn):
+    """parseOcrNumeral() takes a string and matches it to its numerical equivalent. E.g. "     |  |" is equivalent to 1, and "   |_|  |" is equivalent to 4. It returns the matching OcrNumeral value."""
+    #self.nf.asciiDict.values() does not transfer in order, so rebuild local scope list based on the dictionary lookup instead
+    numeralValues = [self.nf.asciiDict["1"], self.nf.asciiDict["2"], self.nf.asciiDict["3"], self.nf.asciiDict["4"], self.nf.asciiDict["5"], self.nf.asciiDict["6"], self.nf.asciiDict["7"], self.nf.asciiDict["8"], self.nf.asciiDict["9"], self.nf.asciiDict["0"]] 
+    ocrIndex = numeralValues.index(asciiIn)
+    recognizedNumeral = self.numeralList[ocrIndex]
+    
+    return recognizedNumeral
 
-  def parseOcrLines(self):
-    """parseOcrLines() takes an array of 3 strings and parses them out, taking the first 3 characters of each line and collating them into a single string. This corresponds to the OcrNumeral.nX.asciiValue attribute for any particular numeral. Each OcrNumeral.nX.numeralValue can then be concatenated into a single 9-digit account number."""
-    pass
+  def parseOcrLines(self, ocrLines):
+    """parseOcrLines() takes an array of 4 strings and parses them out, taking the first 3 characters of each line and collating them into a single 9-character string. This corresponds to the OcrNumeral.nX.asciiValue attribute for any particular numeral. Each OcrNumeral.nX.numeralValue can then be concatenated into a single 9-digit account number.
+
+    Return value is a list of OcrNumerals, each representing a single digit."""
+    asciiList = []
+    ocrNumList = []
+    numStr = ""
+
+    if (ocrLines[3] != "                           "):
+      # raise exception
+      raise OcrLastLineError("Last line of line set is not blank as expected.")
+ 
+    if (len(ocrLines[3]) != 27):
+      raise OcrLastLineError("Last line of line set is not correct length (27 characters).")
+
+    if ((len(ocrLines[0]) < 27) or (len(ocrLines[1]) < 27) or (len(ocrLines[2]) < 27)):
+      raise OcrLinesParseError("Input lines not 27 characters long.")
+
+    #populate asciiList with ascii numeral strings (9 characters long each)
+    #index i runs 9 times, index j runs 3 times
+    for i in range(0, 27, 3):
+      for j in range(0, 3, 1):
+        numStr += (ocrLines[j][i:i+3])
+
+      asciiList.extend([numStr])
+      
+      numStr = ""
+
+    for asciiNumeral in asciiList:
+      ocrNumList.extend([self.parseOcrNumeral(asciiNumeral)])
+    
+    return ocrNumList
+   
     
   def parseOcrFile(self):
     """parseOcrFile takes an argument that specifies file's name and path. It opens that file and parses out numerals algorithmically using OcrNumeralParser.parseOcrLines()."""
@@ -125,3 +160,9 @@ class BankOcr:
   """
   pass
 
+
+class OcrLastLineError(Exception):
+  pass
+
+class OcrLinesParseError(Exception):
+  pass

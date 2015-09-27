@@ -65,11 +65,11 @@ class TestNumeralFactory:
 
 class testOcrNumeralParser:
 
-  def testOcrNumeralInstantiationAndInit(self):
+  def testOcrNumeralParserInstantiationAndInit(self):
     ocrNumParser = OcrNumeralParser()
     assert_is_instance(ocrNumParser, OcrNumeralParser)
 
-  def testOcrNumeralsInOcrNumeralParser(self):
+  def testOcrNumeralsListInOcrNumeralParser(self):
     onp = OcrNumeralParser()
     num1 = ("   " +
             "  |" +
@@ -133,3 +133,92 @@ class testOcrNumeralParser:
     assert_equal([6, 9, 0], onp.numeralList[7].alternateValues)
     assert_equal([3, 8], onp.numeralList[8].alternateValues)
     assert_equal([9], onp.numeralList[9].alternateValues)
+
+  def TestParseNumeral(self):
+    onp = OcrNumeralParser()
+    # 1
+    ascii1 = "     |  |"
+    # 4
+    ascii2 = "   |_|  |"
+    # 9
+    ascii3 = " _ |_| _|"
+
+    rnum1 = onp.parseOcrNumeral(ascii1)
+    rnum2 = onp.parseOcrNumeral(ascii2)
+    rnum3 = onp.parseOcrNumeral(ascii3)
+
+    assert_equal(1, rnum1.numeralValue)
+    assert_equal(ascii1, rnum1.asciiValue)
+    assert_equal([7], rnum1.alternateValues)
+
+    assert_equal(4, rnum2.numeralValue)
+    assert_equal(ascii2, rnum2.asciiValue)
+    assert_equal([], rnum2.alternateValues)
+
+    assert_equal(9, rnum3.numeralValue)
+    assert_equal(ascii3, rnum3.asciiValue)
+    assert_equal([3, 8], rnum3.alternateValues)
+
+  def TestParseOcrLines(self):
+    onp = OcrNumeralParser()
+
+    #111111111
+    ocrAscii1 = ["                           ", "  |  |  |  |  |  |  |  |  |", "  |  |  |  |  |  |  |  |  |", "                           "]    
+    #444444444
+    ocrAscii2 = ["                           ", "|_||_||_||_||_||_||_||_||_|", "  |  |  |  |  |  |  |  |  |", "                           "]
+    #123456789
+    ocrAscii3 = ["    _  _     _  _  _  _  _ ", "  | _| _||_||_ |_   ||_||_|", "  ||_  _|  | _||_|  ||_| _|", "                           "]
+
+    numList1 = onp.parseOcrLines(ocrAscii1)
+    numList2 = onp.parseOcrLines(ocrAscii2)
+    numList3 = onp.parseOcrLines(ocrAscii3)
+
+    # Test list 1
+    assert_equal("     |  |", numList1[0].asciiValue)
+    assert_equal(1, numList1[0].numeralValue)
+    assert_equal([7], numList1[0].alternateValues)
+
+    # Test list 2
+    assert_equal("   |_|  |", numList2[0].asciiValue)
+    assert_equal(4, numList2[0].numeralValue)
+    assert_equal([], numList2[0].alternateValues)
+
+    # Test list 3
+    assert_equal(" _   |  |", numList3[6].asciiValue)
+    assert_equal(7, numList3[6].numeralValue)
+    assert_equal([1], numList3[6].alternateValues)
+    
+  @raises(OcrLastLineError)
+  def TestParseOcrLinesExceptionLastLineErrorMalformed(self):
+    onp = OcrNumeralParser()
+    #Non-blank last line.
+    ocrAscii = ["                           ", "  |  |  |  |  |  |  |  |  |", "  |  |  |  |  |  |  |  |  |", "           ++              "]
+    numListTest = onp.parseOcrLines(ocrAscii)
+
+  @raises(OcrLastLineError)  
+  def TestParseOcrLinesExceptionLastLineErrorWrongLength(self):
+    onp = OcrNumeralParser()
+    #Short last line.
+    ocrAscii = ["                           ", "  |  |  |  |  |  |  |  |  |", "  |  |  |  |  |  |  |  |  |", "                         "]
+    numListTest = onp.parseOcrLines(ocrAscii)
+
+  @raises(OcrLinesParseError)
+  def TestParseOcrLinesExceptionParseError(self):
+    onp = OcrNumeralParser()
+    #Short line 2 (ocrAscii[1]).
+    ocrAscii = ["                           ", "  |  |  |  |  |  |  |  |  |", "  |  |  |  |  |  |  |  |", "                           "]
+    numListTest = onp.parseOcrLines(ocrAscii)
+     
+
+
+class TestCustomExceptions:
+
+  def testOcrLastLineError(self):
+    ex = OcrLastLineError()
+    assert_is_instance(ex, OcrLastLineError)
+    
+    ex = OcrLinesParseError(self)
+    assert_is_instance(ex, OcrLinesParseError)
+
+
+
