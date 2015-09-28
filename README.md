@@ -11,9 +11,8 @@ This kata is currently in progress, on use case step/user story 2.
 Some classes/definitions remain incomplete, but nosetests are always up to date and running flawlessly on each git commit.
 
 ## To do:
-### Step 1:
-- Implement OcrNumeralParser.parseOcrLines() Method.
-- Implement OcrNumeralParser.parseOcrFile() Method.
+### Step 2:
+- Implement checksum algorithm to validate correct account numbers against algorithm.
 
 ### Step 3:
 - Refactor numeral storage so it's easier to look up abnormal scan results against dictionary or other storage scheme for numeral definitions (data storage should support easy slices, slice comparisons, lookups, and indexing).
