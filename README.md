@@ -6,7 +6,9 @@ Implement OCR Scan parsing and validating for 9-digit ASCII presented account nu
 
 # Status
 
-This kata is currently in progress, on use case step/user story 1.
+This kata is currently in progress, on use case step/user story 2.
+
+Some classes/definitions remain incomplete, but nosetests are always up to date and running flawlessly on each git commit.
 
 ## To do:
 ### Step 1:
