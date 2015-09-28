@@ -1,3 +1,4 @@
+from more_itertools import chunked
 """Module to implement Bank OCR Kata. See README.md for more information.
 
 Bank OCR kata implements a thing that reads and validates example OCR numbers."""
@@ -146,11 +147,39 @@ class OcrNumeralParser:
       ocrNumList.extend([self.parseOcrNumeral(asciiNumeral)])
     
     return ocrNumList
+
+
+  def parseOcrNumList(self, ocrList):
+    """parseOcrNumList takes an argument of an ocrList and parses it down to the numerical string it represents.
+
+    returns a string."""
+    outStr = ""
+
+    for numeral in ocrList:
+      outStr += (str(numeral.numeralValue))
+
+    return outStr
    
     
-  def parseOcrFile(self):
-    """parseOcrFile takes an argument that specifies file's name and path. It opens that file and parses out numerals algorithmically using OcrNumeralParser.parseOcrLines()."""
-    pass
+  def parseOcrFile(self, filePath):
+    """parseOcrFile takes an argument that specifies file's name and path. It opens that file and parses out numerals algorithmically using OcrNumeralParser.parseOcrLines().
+
+    returns a list of OcrNumeral Lists, one sublist per OCR account number."""
+    conditionedFileList = []
+    f = open(filePath, 'r')
+    ocrNumeralsListofLists = []
+
+    #First strip newlines from each line of file
+    for line in f:
+      conditionedFileList.extend([line.rstrip("\n")])
+
+    ocrSeqLists = list(chunked(conditionedFileList, 4))
+
+    for ocrSeq in ocrSeqLists:
+      resultList = self.parseOcrLines(ocrSeq)
+      ocrNumeralsListofLists.extend([resultList])
+    
+    return ocrNumeralsListofLists
 
 
 class BankOcr:

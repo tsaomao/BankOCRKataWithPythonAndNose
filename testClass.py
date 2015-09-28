@@ -209,6 +209,34 @@ class testOcrNumeralParser:
     ocrAscii = ["                           ", "  |  |  |  |  |  |  |  |  |", "  |  |  |  |  |  |  |  |", "                           "]
     numListTest = onp.parseOcrLines(ocrAscii)
      
+  def TestParseOcrNumList(self):
+    onp = OcrNumeralParser()
+    nf = NumeralFactory()
+    list = nf.getOcrNumerals(873626531, 9)
+    numStr = onp.parseOcrNumList(list)
+
+    assert_equal("873626531", numStr)
+
+  def TestParseOCRFile(self):
+    onp = OcrNumeralParser()
+    filePath = "./testcase1-validonly.ocr"
+    listOfOcrLists = onp.parseOcrFile(filePath)
+    listOfAcctStrings = []
+
+    for ocrList in listOfOcrLists:
+      listOfAcctStrings.extend([onp.parseOcrNumList(ocrList)])
+
+    assert_equal("000000000", listOfAcctStrings[0])
+    assert_equal("111111111", listOfAcctStrings[1])
+    assert_equal("222222222", listOfAcctStrings[2])
+    assert_equal("333333333", listOfAcctStrings[3])
+    assert_equal("444444444", listOfAcctStrings[4])
+    assert_equal("555555555", listOfAcctStrings[5])
+    assert_equal("666666666", listOfAcctStrings[6])
+    assert_equal("777777777", listOfAcctStrings[7])
+    assert_equal("888888888", listOfAcctStrings[8])
+    assert_equal("999999999", listOfAcctStrings[9])
+    assert_equal("123456789", listOfAcctStrings[10])
 
 
 class TestCustomExceptions:
